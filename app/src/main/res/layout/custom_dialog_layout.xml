@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:background="@color/white">
+
+       <TextView
+           android:id="@+id/dataTextView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:layout_marginTop="20dp"
+           android:layout_marginLeft="30dp"
+           android:layout_marginRight="30dp"
+           android:paddingBottom="8dp"
+           android:text="Your data"
+           android:textColor="@color/light_red"
+           android:textSize="25sp"
+           android:textStyle="bold" />
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="2dp"
+           android:layout_marginLeft="10dp"
+           android:layout_marginRight="10dp"
+           android:background="@color/light_red" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="Name: John Doe"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:paddingBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="jfalkfjaljdkajfkladjfkldajfkldajfkajflkdfjklajfdlkajfdklajflkdjfklajflkd fkafjdlka fjkladfjkladfj fklajflkadjfkldaj"
+        android:hint="Enter your input"
+        android:inputType="text"
+        android:layout_margin="10dp"
+       />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+       android:layout_margin="10dp"
+        android:background="@drawable/button_red"/>
+   </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
