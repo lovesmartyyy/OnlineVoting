@@ -42,6 +42,7 @@ public class CustomDialog extends Dialog {
     DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    String dobPattern ="\\b\\d{1,2}/\\d{1,2}/\\d{4}\\b";
     public CustomDialog(Context context, String data, String name,String funName) {
         super(context);
         this.context =context;
@@ -103,6 +104,10 @@ public class CustomDialog extends Dialog {
             nameTextView.setText(name);
             editText.setHint("eneter your address");
 
+        }else if(functionName.equals("password")){
+            dataTextView.setText(data);
+            nameTextView.setText(name);
+            editText.setHint("eneter your password");
         }
 
 
@@ -119,8 +124,10 @@ public class CustomDialog extends Dialog {
 
 
 
+
                 } else if (functionName.equals("dob")) {
                     changDob();
+
 
 
 
@@ -128,9 +135,14 @@ public class CustomDialog extends Dialog {
                     changeGender();
 
 
+
                 } else if (functionName.equals("address")) {
                   changeAddress();
 
+
+
+                }else if(functionName.equals("password")){
+                    changePassword();
 
                 }
 
@@ -138,27 +150,79 @@ public class CustomDialog extends Dialog {
         });
     }
 
+    private void changePassword() {
+        FirebaseUser user = auth.getCurrentUser();
+        String password = editText.getText().toString().trim();
+//        user.updatePassword(password).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                Toast.makeText(getContext(),"Password Changed Sucessfully"
+//                ,Toast.LENGTH_LONG).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.e("error",e.getMessage());
+//            }
+//        });
+        Toast.makeText(getContext(),"currently faceing some issue",Toast.LENGTH_SHORT).show();
+        dismiss();
+    }
+
     private void changeAddress() {
         String address = editText.getText().toString();
         String userId = auth.getUid();
+        if(address.equals("")){
+            editText.setError("enter your address");
+        }else if(address.length()<20){
+            editText.setError("enter minimum of 20 character");
+        }else {
         DatabaseReference userRef = databaseRef.child("users").child(userId);
         userRef.child("address").setValue(address).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(getContext(),"Gender Changed Sucessfully",Toast.LENGTH_LONG).show();
                 Log.d("debug","dob get updated on database");
+                dismiss();
             }
         });
+        }
 
     }
 
     private void changeGender() {
-        String gender = editText.getText().toString();
+        String gender = editText.getText().toString().toLowerCase();
         String userId = auth.getUid();
+        if(gender.equals("")){
+            editText.setError("enter your gender m/f/n");
+        }else if(gender.equals("male")){
+            funForGender( gender,userId);
+        }else if(gender.equals("female")){
+
+        }else if(gender.equals("none")){
+            funForGender("none",userId);
+        }else if(gender.equals("n")){
+            funForGender("none",userId);
+        }else if(gender.equals("m")){
+            funForGender("male",userId);
+        }else if(gender.equals("f")){
+            funForGender("female",userId);
+        }else {
+            editText.setError("enter correct way of gender ");
+        }
+
+
+
+    }
+
+    private void funForGender(String gender,String userId) {
         DatabaseReference userRef = databaseRef.child("users").child(userId);
         userRef.child("gender").setValue(gender).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(getContext(),"successfully changed your gender",Toast.LENGTH_LONG).show();
                 Log.d("debug","dob get updated on database");
+                dismiss();
             }
         });
     }
@@ -166,45 +230,55 @@ public class CustomDialog extends Dialog {
     private void changDob() {
         String dob = editText.getText().toString();
         String userId = auth.getUid();
-        DatabaseReference userRef = databaseRef.child("users").child(userId);
-        userRef.child("dob").setValue(dob).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.d("debug","dob get updated on database");
-            }
-        });
+        if(dob.equals("")){
+            editText.setError("enter your dob like 12/3/2000");
+        }else if(!dob.matches(dobPattern)){
+            editText.setError("enter dob in this pattern 12/9/2002");
+        }else if (dob.matches(dobPattern)) {
+            DatabaseReference userRef = databaseRef.child("users").child(userId);
+            userRef.child("dob").setValue(dob).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Toast.makeText(getContext(),"dob changed Sucessfully",Toast.LENGTH_LONG).show();
+                    Log.d("debug", "dob get updated on database");
+                    dismiss();
+                }
+            });
+        }
     }
 
     private void chaangeEmail() {
         String email = editText.getText().toString();
         if(email.matches(emailPattern)){
-            FirebaseUser user = auth.getCurrentUser();
-            user.verifyBeforeUpdateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    String userId = auth.getUid();
-                    DatabaseReference userRef = databaseRef.child("users").child(userId);
-                    userRef.child("email").setValue(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("debug","email get updated on database");
-                        }
-                    });
-
-                    Log.d("debug","emailupdated of user email"+user.getEmail());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                    Log.d("error","email do not updated of user email    "+e.getMessage());
-                }
-            });
-
-
-
+//            FirebaseUser user = auth.getCurrentUser();
+//            user.verifyBeforeUpdateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void unused) {
+//                    String userId = auth.getUid();
+//                    DatabaseReference userRef = databaseRef.child("users").child(userId);
+//                    userRef.child("email").setValue(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            Log.d("debug","email get updated on database");
+//                        }
+//                    });
+//
+//                    Log.d("debug","emailupdated of user email"+user.getEmail());
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+//                    Log.d("error","email do not updated of user email    "+e.getMessage());
+//                }
+//            });
+//
+         Toast.makeText(getContext(),"currently facing Some issuees",Toast.LENGTH_SHORT).show();
+         dismiss();
         }else{
+            Toast.makeText(getContext(),"currently facing Some issuees",Toast.LENGTH_SHORT).show();
             editText.setError("enter correct email");
+            dismiss();
 
         }
 
@@ -219,25 +293,33 @@ public class CustomDialog extends Dialog {
         // Here we are updating the "name" field of a specific user with ID "userId"
         String userId = auth.getUid();
         String newName = editText.getText().toString();
+        if(name.equals("")){
+            editText.setError("enter your name");
+        }else if(name.length()<=5){
+            editText.setError("enter minimum of 5 character name");
+        }else {
 
-        // Create a reference to the specific user node you want to update
-        DatabaseReference userRef = databaseRef.child("users").child(userId);
-        // Update the "name" field of the user
-        userRef.child("name").setValue(newName)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // for doing thing when task is completed
-                        if(task.isSuccessful()){
-                           // Toast.makeText(getContext(),"Name changed sucessfully",Toast.LENGTH_LONG).show();
-                            Log.d("debug","sucessfully changeed name");
-                           // CustomDialog.dismiss();
-                        }else {
-                            Log.e("error", task.getException().getMessage());
+            // Create a reference to the specific user node you want to update
+            DatabaseReference userRef = databaseRef.child("users").child(userId);
+            // Update the "name" field of the user
+            userRef.child("name").setValue(newName)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // for doing thing when task is completed
+                            if (task.isSuccessful()) {
+                                // Toast.makeText(getContext(),"Name changed sucessfully",Toast.LENGTH_LONG).show();
+                                Log.d("debug", "sucessfully changeed name");
+                                Toast.makeText(getContext(),"name was sucessfully changed",Toast.LENGTH_LONG).show();
+                                dismiss();
+                                // CustomDialog.dismiss();
+                            } else {
+                                Log.e("error", task.getException().getMessage());
+                            }
+
                         }
-
-                    }
-                });
+                    });
+        }
     }
     private void forGenderAndDob() {
         if(functionName.equals("dob")){

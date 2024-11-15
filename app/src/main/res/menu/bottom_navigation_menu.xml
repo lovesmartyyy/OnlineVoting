@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/home"
+        android:icon="@drawable/home__1_"
+        android:title="Home"/>
+    <item android:id="@+id/result"
+        android:icon="@drawable/ranking"
+        android:title="Result"/>
+    <item android:id="@+id/elected"
+        android:icon="@drawable/elections"
+        android:title="Elected"/>
+    <item android:id="@+id/profile"
+        android:icon="@drawable/user"
+        android:title="Profile"/>
+
+</menu>

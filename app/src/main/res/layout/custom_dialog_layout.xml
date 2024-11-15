@@ -39,6 +39,7 @@
         android:gravity="center"
         android:layout_height="wrap_content"
         android:text="Name: John Doe"
+        android:textColor="#6B5B5B"
         android:textSize="20sp"
         android:layout_margin="10dp"
         android:paddingBottom="8dp"/>
